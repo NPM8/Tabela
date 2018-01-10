@@ -1,0 +1,84 @@
+.page {
+    position: absolute;
+    border: 3px solid black;
+    border-radius: 10px;
+    min-width: 60px;
+    min-height: 60px;
+}
+
+.adder {
+    width: 30px;
+    height: 40px;
+    background: #ffaadd;
+}
+
+#main {
+    width: 100vw;
+    height: 100vh;
+}
+
+button.delete {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 15px;
+    height: 15px;
+    background: #aaffde;
+    padding: 0;
+}
+
+.resize {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    background: #FF3047;
+}
+
+button.edit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    background: #0020FF;
+}
+
+.collapsed {
+    padding: auto;
+    position: fixed; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 9999; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}
+
+.show {
+    display: block;
+}
+
+#full-screen {
+    width: 100vw;
+    height: 100vh;
+    margin: auto;
+    align-items: center;
+
+}
+
+.text {
+    margin: 10px;
+    width: max-content;
+    height: max-content;
+    overflow: auto;
+}
+
+#editor {
+
+}
