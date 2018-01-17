@@ -4,41 +4,86 @@ var table = [],
     defLeft,
     maxNumber = 0;
 
-function getHighestZIndex(element) {
-    var tmpzIndex = element.zIndex;
-    console.log('tablcia: ', table);
-    var zIndexTab = table.map((v) => {
-        return v.zIndex;
-    })
-    var ind = Math.max(...zIndexTab);
-    table.forEach((v, i) => {
-       if(v.zIndex>tmpzIndex)
-           table[i].newzIndex = v.zIndex--;
-    });
-    element.newzIndex = ind;
-}
+// function getHighestZIndex(element) {
+//     var tmpzIndex = element.zIndex;
+//     console.log('tablcia: ', table);
+//     var zIndexTab = table.map((v) => {
+//         return v.zIndex;
+//     })
+//     var ind = Math.max(...zIndexTab);
+//     table.forEach((v, i) => {
+//        if(v.zIndex>tmpzIndex)
+//            table[i].newzIndex = v.zIndex--;
+//     });
+//     element.newzIndex = ind;
+// }
 
 function init() {
-    zIndexHolder = 0;
-    const renderPage = (e) => {
-        var tmpElement = new page(300,300,'#fff',zIndexHolder+1,{top: 100, left: 60});
-        main.appendChild(tmpElement.div);
-        table.push(tmpElement);
-        zIndexHolder++;
-    };
-    var main = document.getElementById('main');
-    var button = document.createElement('button');
-    button.classList.add('adder');
-    button.onclick = renderPage;
-    main.appendChild(button);
-    maxNumber++;
-    document.getElementById("form-edit").onsubmit = (e) => {
-        console.log(event);
+    // zIndexHolder = 0;
+    // const renderPage = (e) => {
+    //     var tmpElement = new page(300,300,'#fff',zIndexHolder+1,{top: 100, left: 60});
+    //     main.appendChild(tmpElement.div);
+    //     table.push(tmpElement);
+    //     zIndexHolder++;
+    // };
+    // var main = document.getElementById('main');
+    // var button = document.createElement('button');
+    // button.classList.add('adder');
+    // button.onclick = renderPage;
+    // main.appendChild(button);
+    // maxNumber++;
+    // document.getElementById("form-edit").onsubmit = (e) => {
+    //     console.log(event);
+    // }
+    const b1 = new board([], 0, 0, 1);
+}
+
+class board{
+    constructor(elems, zIndex, MaxNumber, id, name) {
+        this.elems = elems;
+        this.zIndexAct = zIndex;
+        this.maxNumber = MaxNumber;
+        this.name = name;
+        this._id = id;
+        this.renderPage = (e) => {
+            console.log(this);
+            let tmpElement = new page(300,300,'#fff',this.zIndexAct+1,{top: 100, left: 60}, this);
+            this.main.appendChild(tmpElement.div);
+            this.elems.push(tmpElement);
+            this.zIndexAct++;
+            this.maxNumber++;
+        };
+        console.log(this.elems);
+        this.main = document.getElementById('main');
+        this.adder = document.createElement('button');
+        this.adder.classList.add('adder');
+        this.adder.onclick = (e) => {this.renderPage(e)};
+        this.main.appendChild(this.adder);
+        if(this.elems.length > 0) {
+            this.elems.forEach((v) => {
+                this.main.appendChild(v.div);
+            });
+        }
+    }
+
+    getHighestZIndex(element) {
+        var tmpzIndex = element.zIndex;
+        console.log('tablcia: ', this.elems);
+        var zIndexTab = this.elems.map((v) => {
+            return v.zIndex;
+        })
+        var ind = Math.max(...zIndexTab);
+        this.elems.forEach((v, i) => {
+            if(v.zIndex>tmpzIndex)
+                this.elems[i].newzIndex = v.zIndex--;
+        });
+        element.newzIndex = ind;
     }
 }
 
-class page {
-    constructor(width, height, color, zIndex, position) {
+class page{
+    constructor(width, height, color, zIndex, position, parent) {
+        this.parent = parent;
         this.width = width;
         this.height = height;
         this.zIndex = zIndex;
@@ -151,11 +196,11 @@ class page {
     }
 
     handleDelete() {
-        console.log(table.indexOf(this));
-        table.splice(table.indexOf(this),1);
+        console.log(this.parent.elems);
+        this.parent.elems.splice(this.parent.elems.indexOf(this),1);
         // delete this;
-        main.removeChild(this.div)
-        table = table.map((v, i) => {
+        this.parent.main.removeChild(this.div)
+        this.parent.elems = this.parent.elems.map((v, i) => {
             if(i == 0){
                 if(v.zIndex != 1) {
                     v.newzIndex = 1
@@ -163,23 +208,23 @@ class page {
                     return v;
                 }
             } else {
-                if((v.zIndex - 1) != table[i-1].zIndex) {
-                    v.newzIndex = table[i-1].zIndex + 1;
+                if((v.zIndex - 1) != this.parent.elems[i-1].zIndex) {
+                    v.newzIndex = this.parent.elems[i-1].zIndex + 1;
                     v.setProperts();
                     return v;
                 }
             }
         })
-        if(table.length > 1){
-            let tmpElement = getHighestZIndex(this);
-            zIndexHolder = tmpElement.zIndex;
-        }else if(table.length == 1){
-            zIndexHolder = 1;
+        if(this.parent.elems.length > 1){
+            let tmpElement = this.parent.getHighestZIndex(this);
+            this.parent.zIndexAct = tmpElement.zIndex;
+        }else if(this.parent.elems.length == 1){
+            this.parent.zIndexAct = 1;
         } else {
-            zIndexHolder = 0;
+            this.parent.zIndexAct = 0;
         }
 
-        console.log('tablica: ', table);
+        console.log('tablica: ', this.parent.elems);
         // console.log('zIndexHolder: ', zIndexHolder);
     }
 
